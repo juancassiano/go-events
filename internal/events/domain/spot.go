@@ -33,10 +33,12 @@ type Spot struct {
 
 func NewSpot(event *Event, name string) (*Spot, error) {
 	spot := &Spot{
-		ID:     uuid.New().String(),
-		Name:   name,
-		Status: SpotStatusAvailable,
+		ID:      uuid.New().String(),
+		EventID: event.ID,
+		Name:    name,
+		Status:  SpotStatusAvailable,
 	}
+
 	if err := spot.Validate(); err != nil {
 		return nil, err
 	}
