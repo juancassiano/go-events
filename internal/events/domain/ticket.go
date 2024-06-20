@@ -1,6 +1,12 @@
 package domain
 
+import "errors"
+
 type TicketType string
+
+var (
+	errTicketPriceMustBePositive = errors.New("Ticket price must be positive")
+)
 
 const (
 	TicketTypeHalf TicketType = "half"
@@ -13,4 +19,21 @@ type Ticket struct {
 	Spot       *Spot
 	TicketType TicketType
 	Price      float64
+}
+
+func IsValidTicketType(ticketType TicketType) bool {
+	return ticketType == TicketTypeHalf || ticketType == TicketTypeFull
+}
+
+func (t *Ticket) CalculatePrice() {
+	if t.TicketType == TicketTypeHalf {
+		t.Price /= 2
+	}
+}
+
+func (t *Ticket) Validate() error {
+	if t.Price <= 0 {
+		return errTicketPriceMustBePositive
+	}
+	return nil
 }
