@@ -23,3 +23,13 @@ func (r *mysqlEventRepository) CreateSpot(spot *domain.Spot) error {
 	_, err := r.db.Exec(query, spot.ID, spot.EventID, spot.Name, spot.Status, spot.TicketID)
 	return err
 }
+
+func (r *mysqlEventRepository) ReserveSpot(spotID, ticketID string) error {
+	query := `
+		UPDATE spots
+		SET status = ?, ticket_id = ?
+		WHERE id = ?
+	`
+	_, err := r.db.Exec(query, domain.SpotStatusSold, ticketID, spotID)
+	return err
+}
