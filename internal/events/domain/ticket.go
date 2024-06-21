@@ -1,11 +1,16 @@
 package domain
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/google/uuid"
+)
 
 type TicketType string
 
 var (
 	errTicketPriceMustBePositive = errors.New("Ticket price must be positive")
+	errInvalidTicketType         = errors.New("Invalid ticket type")
 )
 
 const (
@@ -36,4 +41,22 @@ func (t *Ticket) Validate() error {
 		return errTicketPriceMustBePositive
 	}
 	return nil
+}
+
+func NewTicket(event *Event, spot *Spot, ticketType TicketType) (*Ticket, error) {
+	if !IsValidTicketType(ticketType) {
+		return nil, errInvalidTicketType
+	}
+	ticket := &Ticket{
+		ID:         uuid.New().String(),
+		EventID:    event.ID,
+		Spot:       spot,
+		TicketType: ticketType,
+		Price:      event.Price,
+	}
+	ticket.CalculatePrice()
+	if err := ticket.Validate(); err != nil {
+		return nil, err
+	}
+	return ticket, nil
 }

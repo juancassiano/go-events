@@ -17,13 +17,6 @@ type BuyTicketsOutputDTO struct {
 	Tickets []TicketDTO `json:"tickets"`
 }
 
-type TicketDTO struct {
-	ID         string  `json:"id"`
-	SpotID     string  `json:"spot_id"`
-	TicketType string  `json:"ticket_type"`
-	Price      float64 `json:"price"`
-}
-
 type BuyTicketsUseCase struct {
 	repo           domain.EventRepository
 	partnerFactory service.PartnerFactory
@@ -37,13 +30,11 @@ func NewBuyTicketsUseCase(repo domain.EventRepository, partnerFactory service.Pa
 }
 
 func (uc *BuyTicketsUseCase) Execute(input BuyTicketsInputDTO) (*BuyTicketsOutputDTO, error) {
-	// Verifica o evento
 	event, err := uc.repo.FindEventByID(input.EventID)
 	if err != nil {
 		return nil, err
 	}
 
-	// Cria a solicitação de reserva
 	req := &service.ReservationRequest{
 		EventID:    input.EventID,
 		Spots:      input.Spots,
@@ -52,19 +43,16 @@ func (uc *BuyTicketsUseCase) Execute(input BuyTicketsInputDTO) (*BuyTicketsOutpu
 		Email:      input.Email,
 	}
 
-	// Obtém o serviço do parceiro
 	partnerService, err := uc.partnerFactory.CreatePartner(event.PartnerID)
 	if err != nil {
 		return nil, err
 	}
 
-	// Reserva os lugares usando o serviço do parceiro
 	reservationResponse, err := partnerService.MakeReservation(req)
 	if err != nil {
 		return nil, err
 	}
 
-	// Salva os ingressos no banco de dados
 	tickets := make([]domain.Ticket, len(reservationResponse))
 	for i, reservation := range reservationResponse {
 		spot, err := uc.repo.FindSpotByName(event.ID, reservation.Spot)

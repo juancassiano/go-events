@@ -21,3 +21,9 @@ type EventDTO struct {
 	Price        float64 `json:"price"`
 	PartnerID    int     `json:"partnerID"`
 }
+type TicketDTO struct {
+	ID         string  `json:"id"`
+	SpotID     string  `json:"spot_id"`
+	TicketType string  `json:"ticket_type"`
+	Price      float64 `json:"price"`
+}
