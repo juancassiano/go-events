@@ -115,6 +115,9 @@ func (r *inMemoryEventRepository) ReserveSpot(spotID, ticketID string) error {
 	if !exists {
 		return domain.ErrSpotNotFound
 	}
+	if spot.Status == domain.SpotStatusSold {
+		return domain.ErrSpotAlreadyReserved
+	}
 
 	spot.Status = domain.SpotStatusSold
 	spot.TicketID = ticketID
