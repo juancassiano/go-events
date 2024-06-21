@@ -40,7 +40,7 @@ func loadDataFromJSON(filename string) (*Data, error) {
 }
 func main() {
 	// db, err := sql.Open("mysql", "test_user:test_password@tcp(localhost:3306/test_db)")
-	data, err := loadDataFromJSON("path/to/your/data.json")
+	data, err := loadDataFromJSON("/home/juan/Documentos/projetos/fullcycle/go/data.json")
 	if err != nil {
 		panic(err)
 	}
