@@ -42,3 +42,36 @@ func (r *mysqlEventRepository) CreateTicket(ticket domain.Ticket) error {
 	_, err := r.db.Exec(query, ticket.ID, ticket.EventID, ticket.Spot.ID, ticket.TicketType, ticket.Price)
 	return err
 }
+
+func (r *mysqlEventRepository) FindEventById(eventID string) (*domain.Event, error) {
+	query := `
+		SELECT id, name, location, organization, rating, date, image_url, capacity, price, partner_id
+		FROM events
+		WHERE id = ?
+	`
+	rows, err := r.db.Query(query, eventID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var event *domain.Event
+	err = rows.Scan(
+		&event.ID,
+		&event.Name,
+		&event.Location,
+		&event.Organization,
+		&event.Rating,
+		&event.Date,
+		&event.ImageURL,
+		&event.Capacity,
+		&event.Price,
+		&event.PartnerID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return event, nil
+}

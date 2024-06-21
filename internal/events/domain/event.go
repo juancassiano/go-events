@@ -33,7 +33,7 @@ type Event struct {
 	ImageURL     string
 	Capacity     int
 	Price        float64
-	PartnerId    int
+	PartnerID    int
 	Spots        []Spot
 	Tickets      []Ticket
 }
