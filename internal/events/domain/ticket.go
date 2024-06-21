@@ -9,8 +9,8 @@ import (
 type TicketType string
 
 var (
-	errTicketPriceMustBePositive = errors.New("Ticket price must be positive")
-	errInvalidTicketType         = errors.New("Invalid ticket type")
+	errTicketPriceMustBePositive = errors.New("ticket price must be positive")
+	errInvalidTicketType         = errors.New("invalid ticket type")
 )
 
 const (
